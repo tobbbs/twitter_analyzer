@@ -1,0 +1,9 @@
+What tweets do you want to analyze?
+<form action="/twitter_analyzer" method="get">
+  Search: <input type="text" name="search_item"><br>
+  <input type="submit" value="Submit">
+</form>
+
+{% for tweet in tweet_text %}
+    <div>{{ tweet }}</div>
+{% endfor %}
