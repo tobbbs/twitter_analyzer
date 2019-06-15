@@ -3,7 +3,7 @@ from sentiment_analyzer import *
 import requests
 import json
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 @app.route('/')
 def hello():

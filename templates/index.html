@@ -1,9 +1,29 @@
-What tweets do you want to analyze?
-<form action="/twitter_analyzer" method="get">
-  Search: <input type="text" name="search_item"><br>
-  <input type="submit" value="Submit">
-</form>
 
-{% for tweet in tweet_text %}
-    <div>{{ tweet }}</div>
-{% endfor %}
+
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+
+		<title>The HTML5 Herald</title>
+		<meta name="description" content="Twitter Analyzer">
+		<meta name="author" content="Tobin Leung">
+
+		<link rel="stylesheet" href="/static/style.css">
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+
+	</head>
+
+	<body>
+		<div class="question">What tweets do you want to analyze?</div>
+		<form action="/twitter_analyzer" method="get">
+		  Search: <input type="text" name="search_item"><br>
+		  <input type="submit" value="Submit">
+		</form>
+
+		{% for tweet in tweet_text %}
+		    <div>{{ tweet }}</div>
+		{% endfor %}
+	</body>
+</html>
