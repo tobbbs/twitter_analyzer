@@ -1,0 +1,17 @@
+<html>
+   <body>
+      <form action = "http://localhost:5000/tweet_submit" method = "POST">
+         <p>Tweet <input type = "text" name = "input_tweet" /></p>
+         <p>Username <input type = "text" name = "input_username" /></p>         
+         <p><input type = "submit" value = "submit" /></p>
+      </form>
+	<table border = 1>
+         {% for key, value in all_tweets.items() %}
+            <tr>
+               <th> {{ key }} </th>
+               <td> {{ value }} </td>
+            </tr>
+         {% endfor %}
+     </table>
+   </body>
+</html>

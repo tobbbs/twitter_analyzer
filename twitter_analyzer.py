@@ -3,11 +3,28 @@ from sentiment_analyzer import *
 import requests
 import json
 
+with open('data/database.json', 'r') as f:
+    database_tweets = json.load(f)
+    print(database_tweets)
+
 app = Flask(__name__, static_url_path='/static')
 
 @app.route('/')
 def hello():
 	return render_template('index.html')
+
+@app.route('/tweet_submit',methods = ['POST', 'GET'])
+def result():
+    if request.method == 'POST':
+        tweet = request.form["input_tweet"]
+        name = request.form["input_username"]
+        if name not in database_tweets:
+            database_tweets[name] = []
+        database_tweets[name].append(tweet)
+
+        with open('data/database.json', 'w+') as g:
+            json.dump(database_tweets, g)
+    return render_template("interactive_tweet.html", all_tweets=database_tweets)
 
 @app.route('/twitter_analyzer')
 def analyze_tweet():
