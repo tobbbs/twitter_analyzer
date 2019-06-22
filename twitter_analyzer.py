@@ -2,6 +2,12 @@ from flask import Flask, render_template, request
 from sentiment_analyzer import *
 import requests
 import json
+import sqlite3
+conn = sqlite3.connect("twitter.db")
+conn.execute('CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY AUTOINCREMENT, username text not null)');
+conn.execute('CREATE TABLE IF NOT EXISTS tweet(id INTEGER PRIMARY KEY AUTOINCREMENT, body text not null, user_id INTEGER, FOREIGN KEY(user_id) REFERENCES user(id) )');
+conn.commit()
+conn.close()
 
 with open('data/database.json', 'r') as f:
     database_tweets = json.load(f)
@@ -15,15 +21,18 @@ def hello():
 
 @app.route('/tweet_submit',methods = ['POST', 'GET'])
 def result():
-    if request.method == 'POST':
-        tweet = request.form["input_tweet"]
-        name = request.form["input_username"]
-        if name not in database_tweets:
-            database_tweets[name] = []
-        database_tweets[name].append(tweet)
-
-        with open('data/database.json', 'w+') as g:
-            json.dump(database_tweets, g)
+    
+    with sqlite3.connect("twitter.db") as conn:
+        c = conn.cursor()
+        if request.method == 'POST':
+            tweety = request.form["input_tweet"]
+            name = request.form["input_username"]
+            c.execute("INSERT INTO user(username) VALUES (?)", (name,))
+            user_id = c.execute("SELECT user.id FROM user WHERE user.username=?",(name,)).fetchone()[0]
+            print(user_id)
+            c.execute("INSERT INTO tweet(body, user_id) VALUES (?, ?)", (tweety, user_id))
+            conn.commit()
+        database_tweets = list(map(lambda x: x, c.execute('SELECT * FROM tweet, user WHERE tweet.user_id = user.id')))   
     return render_template("interactive_tweet.html", all_tweets=database_tweets)
 
 @app.route('/twitter_analyzer')
